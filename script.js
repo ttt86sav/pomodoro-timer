@@ -1,0 +1,81 @@
+const startButton = document.querySelector('#start');
+let timer = document.querySelector('#pomodoro-time');
+let startValue = timer.textContent;
+let minutes = +startValue.slice(0, 2);
+let seconds = +startValue.slice(3);
+let timerId = null;
+const breakButton = document.querySelector('#break');
+const pomodoroButton = document.querySelector('#pomodoro');
+const resetButton = document.querySelector('#reset');
+
+breakButton.addEventListener('click', function() {
+    clearInterval(timerId);
+    startButton.textContent = "start";
+    startValue = "05:00";
+    timer.textContent = startValue;
+    minutes = +startValue.slice(0, 2);
+    seconds = +startValue.slice(3);
+    breakButton.classList.toggle('active');
+    pomodoroButton.classList.toggle('active')
+});
+
+pomodoroButton.addEventListener('click', function() {
+    clearInterval(timerId);
+    startButton.textContent = "start";
+    startValue = "25:00";
+    timer.textContent = startValue;
+    minutes = +startValue.slice(0, 2);
+    seconds = +startValue.slice(3);
+    breakButton.classList.toggle('active');
+    pomodoroButton.classList.toggle('active');
+});
+
+startButton.addEventListener('click', function() {
+    if (startButton.textContent == "start") {
+        startButton.textContent = "stop";
+        timerId = setInterval(() => {
+            if (minutes > 0) {
+
+                if (seconds <= 0) {
+                    minutes -= 1;
+                    seconds = 60;
+                }
+
+                seconds--;
+                timer.textContent = (`${minutes}:${seconds}`);
+
+                if (seconds <= 9) {
+                    seconds = `0${seconds}`;
+                    timer.textContent = (`${minutes}:${seconds}`);
+                }
+                if (minutes <= 9) {
+                    timer.textContent = (`0${minutes}:${seconds}`);
+                }
+            } else {
+                seconds--;
+                timer.textContent = (`0${minutes}:${seconds}`);
+
+                if (seconds <= 9) {
+                    seconds = `0${seconds}`;
+                    timer.textContent = (`0${minutes}:${seconds}`);
+                }
+                if (seconds <= 0) {
+                    clearInterval(timerId);
+                    startButton.textContent = "start";
+                    timer.textContent = startValue;
+                    minutes = +startValue.slice(0, 2);
+                    seconds = +startValue.slice(3);
+                }
+            }
+        }, 100);
+    } else {
+        startButton.textContent = "start";
+        clearInterval(timerId);
+    }
+})
+
+resetButton.addEventListener('click', function() {
+    timer.textContent = startValue;
+    clearInterval(timerId);
+    startButton.textContent = "start";
+})
